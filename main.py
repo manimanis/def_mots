@@ -1,13 +1,10 @@
 from contextlib import contextmanager
 import os
 from flask import Flask, jsonify, render_template
+from flask_sqlalchemy import SQLAlchemy
 import sqlite3
-
-def connect_db():
-    cur_dir = os.path.dirname(__file__)
-    db = sqlite3.connect(os.path.join(cur_dir, 'dictionnaire.db3'))
-    db.row_factory = sqlite3.Row
-    return db
+from database import init_db
+from models import TypeMot, db
 
 @contextmanager
 def create_cursor(db: sqlite3.Connection):
@@ -15,8 +12,12 @@ def create_cursor(db: sqlite3.Connection):
     yield cur
     cur.close()
 
+cur_dir = os.path.dirname(__file__)
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dictionnaire.db3')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+init_db(app)
 
 @app.route("/")
 def index_page():
@@ -24,11 +25,5 @@ def index_page():
 
 @app.route("/words")
 def list_words():
-    db = connect_db()
-    with create_cursor(db) as cur:
-        cur.execute("SELECT * " +
-                    "FROM mots AS m " +
-                    "  INNER JOIN type_mots AS tm ON m.type = tm.numTypeMot " +
-                    "ORDER BY mot")
-        mots = cur.fetchall()
-    return jsonify(mots)
+    type_mots = db.session.execute(db.select(TypeMot).order_by(TypeMot.type_mot)).fetchall()
+    return jsonify(type_mots)
