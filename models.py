@@ -1,35 +1,43 @@
-from sqlalchemy import ForeignKey
-from database import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import DeclarativeBase, relationship
 
-class TypeMot(db.Model):
-    __tablename__ = 'type_mots'
-    id = db.Column(
-        db.Integer,
+
+class Base(DeclarativeBase):
+    pass
+
+
+class TypeMot(Base):
+    __tablename__ = 'type_mot'
+    id = Column(
+        Integer,
         primary_key=True,
         nullable=False,
         index=True
     )
-    type_mot = db.Column(db.String)
+    type_mot = Column(String)
 
     def __repr__(self):
         return f"TypeMot(id={self.id}, type_mot=\"{self.type_mot}\")"
 
 
-class Mot(db.Model):
-    __tablename__ = 'mots'
-    id = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
-    mot = db.Column(db.String)
-    type_mot_id = db.Column(db.Integer, ForeignKey('type_mots.id'))
-    type_mot = db.relationship("TypeMot")
+class Mot(Base):
+    __tablename__ = 'mot'
+    id = Column(Integer, primary_key=True, nullable=False, index=True)
+    type_mot_id = Column(Integer, ForeignKey('type_mot.id'))
+    type_mot = relationship("TypeMot")
+    mot = Column(String)
+    definitions = relationship("DefinitionMot", backref="mots")
 
     def __repr__(self):
-        return f"Mot(id={self.id}, mot=\"{self.mot}\")"
+        return f"Mot(id={self.id}, mot=\"{self.mot}\", type_mot=\"{self.type_mot}\")"
 
-class DefinitionMot(db.Model):
-    __tablename__ = 'definitions_mots'
-    id = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
-    mot_id = db.Column(db.Integer, ForeignKey('mots.id'))
-    definition = db.Column(db.String)
 
+class DefinitionMot(Base):
+    __tablename__ = 'definition_mot'
+    id = Column(Integer, primary_key=True, nullable=False, index=True)
+    mot_id = Column(Integer, ForeignKey('mot.id'))
+    definition = Column(String)
+    
+    
     def __repr__(self):
         return f"DefinitionMot(id={self.id}, definition=\"{self.definition}\")"

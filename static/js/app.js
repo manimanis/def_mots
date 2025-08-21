@@ -10,7 +10,7 @@ const app = new Vue({
   },
   methods: {
     loadWords() {
-      return fetch('/words')
+      return fetch('/mots')
         .then(rep => rep.json())
         .then(data => console.log(data))
     }

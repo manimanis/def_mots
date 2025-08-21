@@ -13,6 +13,14 @@
     <div id="app">
       <h1>Liste des mots</h1>
       <p>[[message]]</p>
+      <div class="my-2">
+        <form action="#">
+          <div class="my-1">
+            <label for="mot">Mot</label>
+            <input type="text" id="mot" class="form-control">
+          </div>
+        </form>
+      </div>
     </div>
   </main>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

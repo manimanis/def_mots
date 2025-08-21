@@ -1,12 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import Base
 
-class Base(DeclarativeBase):
-    pass
+DATABASE_URL = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dictionnaire.db3')
 
-db = SQLAlchemy(model_class=Base)
+engine = create_engine(DATABASE_URL, echo=True)
+SessionLocal = sessionmaker(bind=engine)
 
-def init_db(app):
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+def init_db():
+    Base.metadata.create_all(engine)

@@ -15,3 +15,15 @@ mot2 = Mot(mot="Jouer", type_mot=tm1)
 db.session.add(mot1)
 db.session.add(mot2)
 db.session.commit()
+
+# definitions
+dm1 = DefinitionMot(mot=mot1, definition="Une définition 1")
+dm2 = DefinitionMot(mot=mot1, definition="Une définition 2")
+dm3 = DefinitionMot(mot=mot2, definition="Une définition 3")
+dm4 = DefinitionMot(mot=mot2, definition="Une définition 4")
+dm5 = DefinitionMot(mot=mot2, definition="Une définition 5")
+db.session.add_all([dm1, dm2, dm3, dm4, dm5])
+db.session.commit()
+
+#---
+db.session.execute(db.select(Mot)).fetchall()
