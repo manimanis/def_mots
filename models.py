@@ -3,7 +3,8 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 
 
 class Base(DeclarativeBase):
-    pass
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class TypeMot(Base):
@@ -37,7 +38,7 @@ class DefinitionMot(Base):
     id = Column(Integer, primary_key=True, nullable=False, index=True)
     mot_id = Column(Integer, ForeignKey('mot.id'))
     definition = Column(String)
-    
-    
+    mot = relationship("Mot")
+
     def __repr__(self):
         return f"DefinitionMot(id={self.id}, definition=\"{self.definition}\")"

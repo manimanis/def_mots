@@ -14,10 +14,26 @@
       <h1>Liste des mots</h1>
       <p>[[message]]</p>
       <div class="my-2">
-        <form action="#">
+        <h2>Nouveau mot</h2>
+        <form action="#" @submit.prevent="return saveWord()">
           <div class="my-1">
             <label for="mot">Mot</label>
-            <input type="text" id="mot" class="form-control">
+            <input type="text" id="mot" class="form-control" v-model="currMot.mot">
+          </div>
+          <div class="my-1">
+            <label for="type-mot">Type</label>
+            <select id="type-mot" v-model="currMot.type_mot.id" class="form-control">
+              <option value="-1">Sélectionner</option>
+              <option v-for="wordType in wordsTypes" :value="wordType.id">[[wordType.type_mot]]</option>
+            </select>
+          </div>
+          <div class="my-1">
+            <label for="definition">Définition</label>
+            <textarea id="definition" class="form-control" rows="10"  v-model="currMot.definition"></textarea>
+          </div>
+          <div class="my-1">
+            <button class="btn btn-primary">Enregister</button>
+            <button class="btn btn-warning">Annuler</button>
           </div>
         </form>
       </div>
