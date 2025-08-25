@@ -18,6 +18,7 @@ const app = new Vue({
   el: "#app",
   delimiters: ['[[', ']]'],
   data: {
+    mode: 'listWords',
     message: "Hello",
     words: [],
     wordsTypes: [],
@@ -31,7 +32,7 @@ const app = new Vue({
     loadWords() {
       return fetch('/mots')
         .then(rep => rep.json())
-        .then(data => console.log(data))
+        .then(data => this.words = data);
     },
     loadTypesMots() {
       return fetch('types-mots')
@@ -53,6 +54,13 @@ const app = new Vue({
         .then(data => {
           console.log("Mot créé :", data);
         });
+    },
+    addNewWord() {
+      this.mode = 'addWord';
+      this.currMot = new Mot();
+    },
+    cancel() {
+      this.mode = 'listWords';
     }
   }
 });

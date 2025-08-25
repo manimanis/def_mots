@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Défintion des mots</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
 
@@ -12,8 +13,20 @@
   <main class="my-2 container">
     <div id="app">
       <h1>Liste des mots</h1>
-      <p>[[message]]</p>
-      <div class="my-2">
+      
+      <div class="my-2" v-if="mode == 'listWords'">
+        <h2>Liste des mots</h2>
+
+        <div class="row">
+          <div class="col-6 col-sm-4 col-md-3 col-xl-2 col-xxl-1" v-for="word, wordIdx in words">[[word.mot]]</div>
+        </div>
+
+        <div class="my-2">
+          <button class="btn btn-success" @click="addNewWord()">Nouveau mot...</button>
+        </div>
+      </div>
+
+      <div class="my-2" v-if="mode == 'addWord'">
         <h2>Nouveau mot</h2>
         <form action="#" @submit.prevent="return saveWord()">
           <div class="my-1">
@@ -32,8 +45,8 @@
             <textarea id="definition" class="form-control" rows="10"  v-model="currMot.definition"></textarea>
           </div>
           <div class="my-1">
-            <button class="btn btn-primary">Enregister</button>
-            <button class="btn btn-warning">Annuler</button>
+            <button type="submit" class="btn btn-primary">Enregister</button>
+            <button type="button" class="btn btn-warning" @click="cancel()">Annuler</button>
           </div>
         </form>
       </div>

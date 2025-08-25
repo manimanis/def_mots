@@ -1,9 +1,19 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, inspect
 from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 class Base(DeclarativeBase):
     def to_dict(self):
+        # dict_ = {}
+        # for key in self.__mapper__.c.keys():
+        #     if not key.startswith('_'):
+        #         dict_[key] = getattr(self, key)
+
+        # for key, prop in inspect(self.__class__).all_orm_descriptors.items():
+        #     if isinstance(prop, hybrid_property):
+        #         dict_[key] = getattr(self, key)
+        # return dict_
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
@@ -31,6 +41,11 @@ class Mot(Base):
 
     def __repr__(self):
         return f"Mot(id={self.id}, mot=\"{self.mot}\", type_mot=\"{self.type_mot}\")"
+    
+    def to_dict(self):
+        dct =  super().to_dict()
+        dct["definitions"] = [df.to_dict() for df in self.definitions]
+        return dct
 
 
 class DefinitionMot(Base):
